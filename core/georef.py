@@ -39,19 +39,23 @@ def rotation_angle(G, w, h):
     return math.degrees(math.atan2(p[1, 1] - p[0, 1], p[1, 0] - p[0, 0]))
 
 
+def _try_remove(path):
+    try:
+        os.remove(path)
+    except OSError:  # p. ej. QGIS tiene el archivo abierto
+        return False
+    return True
+
+
 def unique_path(path):
     if not os.path.exists(path):
         return path
-    try:
-        os.remove(path)  # falla si QGIS lo tiene abierto -> se usa otro nombre
+    if _try_remove(path):
         for ext in (".aux.xml", ".ovr"):
             if os.path.exists(path + ext):
-                os.remove(path + ext)
-        if not os.path.exists(path):
-            return path
-    except Exception:
-        pass
-    base, ext = os.path.splitext(path)
+                _try_remove(path + ext)
+        return path
+    base, ext = os.path.splitext(path)  # no se pudo reemplazar: se usa otro nombre
     i = 1
     while os.path.exists(f"{base}_{i}{ext}"):
         i += 1
@@ -77,8 +81,8 @@ def warp_projective(rgb, G, out_path, wkt, res):
     h, w = rgb.shape[:2]
     fp = footprint(G, w, h)
     ox, oy, ow, oh, res = _output_grid(fp, res)
-    O = np.array([[res, 0, ox + 0.5 * res], [0, -res, oy - 0.5 * res], [0, 0, 1]])
-    M = np.linalg.inv(O) @ G
+    out_grid = np.array([[res, 0, ox + 0.5 * res], [0, -res, oy - 0.5 * res], [0, 0, 1]])
+    M = np.linalg.inv(out_grid) @ G
     rgba = np.dstack([rgb, np.full((h, w), 255, np.uint8)])
     out = cv2.warpPerspective(rgba, M, (ow, oh), flags=cv2.INTER_LINEAR,
                               borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))

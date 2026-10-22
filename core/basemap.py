@@ -34,7 +34,7 @@ def _meters_factor(crs):
         from qgis.core import Qgis
         meters = Qgis.DistanceUnit.Meters
     except AttributeError:
-        meters = QgsUnitTypes.DistanceMeters
+        meters = QgsUnitTypes.DistanceUnit.DistanceMeters  # QGIS < 3.30
     return QgsUnitTypes.fromUnitToUnitFactor(crs.mapUnits(), meters)
 
 

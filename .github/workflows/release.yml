@@ -1,0 +1,31 @@
+# Al publicar una release en GitHub, arma el ZIP del plugin (carpeta drone_ai_georef/) y lo adjunta.
+name: Empaquetar plugin
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: drone_ai_georef
+
+      - name: Crear ZIP
+        run: |
+          rm -rf drone_ai_georef/.git drone_ai_georef/.github
+          VERSION=$(grep '^version=' drone_ai_georef/metadata.txt | cut -d= -f2 | tr -d '\r')
+          ZIP="drone_ai_georef-${VERSION}.zip"
+          zip -r "$ZIP" drone_ai_georef -x '*/__pycache__/*' '*.pyc'
+          unzip -l "$ZIP"
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+
+      - name: Adjuntar a la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" "$ZIP" --clobber --repo "${{ github.repository }}"

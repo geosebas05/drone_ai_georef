@@ -58,10 +58,10 @@ def pip_args(packages):
 def refresh_paths():
     try:
         user_site = site.getusersitepackages()
-        if user_site not in sys.path:
-            site.addsitedir(user_site)
-    except Exception:
-        pass
+    except AttributeError:  # intérpretes embebidos sin carpeta de usuario
+        user_site = None
+    if user_site and user_site not in sys.path:
+        site.addsitedir(user_site)
     importlib.invalidate_caches()
 
 

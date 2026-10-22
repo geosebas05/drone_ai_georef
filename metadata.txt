@@ -4,7 +4,7 @@ qgisMinimumVersion=3.22
 qgisMaximumVersion=4.99
 description=Automatic georeferencing of drone photos by AI feature matching against a basemap / Georreferenciación automática de fotos de dron con IA.
 about=Georeferences drone photos (JPG/TIF) without manual ground control points. It reads GPS, altitude and heading from EXIF/XMP, renders the basemap around the photo (Esri World Imagery, OpenStreetMap or any raster/WMS/XYZ layer of the project, e.g. your own orthophoto), finds common patterns with SIFT/ORB or deep-learning matchers (DISK+LightGlue, LoFTR) and estimates the transformation with MAGSAC++/RANSAC plus a refinement pass. Outputs a GeoTIFF, a .points file for the QGIS Georeferencer and a footprint layer with quality indicators. Requires OpenCV (the plugin offers to install opencv-python-headless with pip, after asking). The AI matchers additionally need torch and kornia (optional, ~250 MB). User interface in Spanish. | Georreferencia fotos de dron sin puntos de control manuales: lee GPS/altura/rumbo, descarga el mapa base, reconoce patrones con IA y genera GeoTIFF, .points y huellas con indicadores de calidad.
-version=0.2.0
+version=0.2.1
 author=Geosebas
 email=geosebasyt@gmail.com
 license=GPL-3.0-or-later
@@ -17,8 +17,10 @@ tags=drone,uav,dron,georeference,georeferencing,georreferenciacion,AI,deep learn
 experimental=True
 deprecated=False
 hasProcessingProvider=no
-supportsQt6=True
 changelog=
+    0.2.1
+    - Fixes for the plugins.qgis.org security and quality scan (no silent try/except/pass)
+    - Qt6/QGIS 4: scoped DistanceUnit enum; removed the deprecated supportsQt6 flag
     0.2.0
     - Similarity model (4 DOF) besides homography: robust with few matches
     - Automatic zoom fallback when the basemap has no imagery at full resolution

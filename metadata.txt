@@ -1,0 +1,29 @@
+[general]
+name=Drone AI Georef
+qgisMinimumVersion=3.22
+qgisMaximumVersion=4.99
+description=Automatic georeferencing of drone photos by AI feature matching against a basemap / Georreferenciación automática de fotos de dron con IA.
+about=Georeferences drone photos (JPG/TIF) without manual ground control points. It reads GPS, altitude and heading from EXIF/XMP, renders the basemap around the photo (Esri World Imagery, OpenStreetMap or any raster/WMS/XYZ layer of the project, e.g. your own orthophoto), finds common patterns with SIFT/ORB or deep-learning matchers (DISK+LightGlue, LoFTR) and estimates the transformation with MAGSAC++/RANSAC plus a refinement pass. Outputs a GeoTIFF, a .points file for the QGIS Georeferencer and a footprint layer with quality indicators. Requires OpenCV (the plugin offers to install opencv-python-headless with pip, after asking). The AI matchers additionally need torch and kornia (optional, ~250 MB). User interface in Spanish. | Georreferencia fotos de dron sin puntos de control manuales: lee GPS/altura/rumbo, descarga el mapa base, reconoce patrones con IA y genera GeoTIFF, .points y huellas con indicadores de calidad.
+version=0.2.0
+author=Geosebas
+email=geosebasyt@gmail.com
+license=GPL-3.0-or-later
+repository=https://github.com/geosebas05/drone_ai_georef
+tracker=https://github.com/geosebas05/drone_ai_georef/issues
+homepage=https://github.com/geosebas05/drone_ai_georef
+category=Raster
+icon=icon.svg
+tags=drone,uav,dron,georeference,georeferencing,georreferenciacion,AI,deep learning,feature matching,SIFT,LoFTR,LightGlue,orthophoto,raster
+experimental=True
+deprecated=False
+hasProcessingProvider=no
+supportsQt6=True
+changelog=
+    0.2.0
+    - Similarity model (4 DOF) besides homography: robust with few matches
+    - Automatic zoom fallback when the basemap has no imagery at full resolution
+    - Feature cache and 8-orientation search for AI matchers without heading
+    - Manual GSD option; fixed QGIS freeze caused by warnings from worker threads
+    - Only basemap presets whose terms allow third-party use (Esri, OSM)
+    0.1.0
+    - First version
